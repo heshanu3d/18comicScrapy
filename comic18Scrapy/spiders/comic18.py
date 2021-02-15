@@ -10,11 +10,12 @@ import re
 
 class Comic18Spider(CrawlSpider):
     name = 'comic18'
-    base_website_url = '18comic1.one'
+    # base_website_url = '18comic1.one'
+    base_website_url = '18comic.org'
     allowed_domains = [base_website_url]
     # start_urls = ['https://18comic.org/']
-    start_urls = ['https://18comic.org/search/photos?search_query=全彩']
-    # start_urls = ['https://18comic.org/album/102658'] #sub
+    # start_urls = ['https://18comic.org/search/photos?search_query=全彩']
+    start_urls = ['https://18comic.org/album/216659/'] #sub
     # start_urls = ['https://18comic.org/album/159976/'] #page
     # start_urls = ['https://18comic.org/photo/143749'] #sub_page
 
@@ -23,17 +24,17 @@ class Comic18Spider(CrawlSpider):
 
     rules = (
         # Rule(LinkExtractor(allow=r'18comic.org/search/photos\?search_query=全彩&page=\d+'), follow=True),
-        Rule(LinkExtractor(allow=r'album/'), callback='parse_album', process_request='rule_process_request_modify_prior', follow=False),
+        Rule(LinkExtractor(allow=r'album/216659'), callback='parse_album', process_request='rule_process_request_modify_prior', follow=True),
         # Rule(LinkExtractor(allow=r'photo/'), callback='parse_subpage', follow=True),
     )
 
     def parse_album(self, response):
-    # def parse(self, response):
+        print(response.url)
         book_name = response.xpath("//div[@itemprop='name']/text()").get().strip()
         if not book_name:
             strtmp = re.findall(r'/album/(\d+)', response.url)
             if strtmp:
-                book_name = strtmp[0]
+                book_name = int(strtmp[0])
         self.logger.debug("book_name:%s\n" % book_name)
 
         #subname
@@ -42,7 +43,7 @@ class Comic18Spider(CrawlSpider):
             self.logger.debug("this manga has subpage\n")
             if subname:
                 for s in subname:
-                    item = mangaItem()
+                    # item = mangaItem()
                     sub_book_name = re.sub('[ \n]','',s.xpath(".//li//text()").get().strip())
                     sub_book_url = s.xpath("./@href").get()
                     self.logger.debug("sub:%s", sub_book_name)
@@ -88,15 +89,32 @@ class Comic18Spider(CrawlSpider):
 
         book_id = re.findall('photo/(\d+)',response.url)
         if book_id:
-            book_id = book_id[0]
+            book_id = int(book_id[0])
         else:
             self.logger.error("err.cannot find book_id from response.url in %s\n", response.url)
             return
         self.pic_download_prior += 1
-        self.logger.info("[%d]%s/%s prior:%d subpage has %d imgs.\n" % (book_id, response.meta['dirname'], self.pic_download_prior, response.meta['subdirname'], total_page))
+
+        print(book_id)
+        print(response.meta['dirname'])
+        print(self.pic_download_prior)
+        print(response.meta['subdirname'])
+        print(total_page)
+
+        self.logger.info("[%d]%s/%s prior:%s subpage has %d imgs.\n" % (book_id, response.meta['dirname'], self.pic_download_prior, response.meta['subdirname'], total_page))
+
         for i in range(1,total_page+1):
             imgurltmp = []
-            imgurltmp.append("https://img18comic6cgewp.kiseouhgf.info/media/photos/%d/%05d.jpg" % (int(book_id), i))
+            img_index = "%05d" % i
+            img_src_node = response.xpath("//div[@id='%s.jpg']//img" % img_index)
+            if img_src_node:
+                img_url = img_src_node[0].xpath(".//@data-original").get()
+            else:
+                print("img_url not found! url:%s, img_index:%d" % (response.url, i))
+                continue
+            print("img_url : %s" % img_url)
+            imgurltmp.append(img_url)
+
             item = mangaItem()
             item['imgurl'] = imgurltmp
             item['imgname'] = str(i) + ".jpg"
@@ -107,5 +125,5 @@ class Comic18Spider(CrawlSpider):
 
     def rule_process_request_modify_prior(self, request, response):
         self.book_follow_prior += 1
-        request.priority = self.book_follow_prior
+        # request.priority = self.book_follow_prior
         return request

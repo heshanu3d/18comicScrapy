@@ -22,6 +22,8 @@ SCHEDULER_PERSIST = True  #将程序持久化保存
 IMAGES_STORE = '../comic18ScrapyOut'
 LOG_LEVEL = "INFO"
 REDIS_URL = "redis://127.0.0.1:6379"
+
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'comicCrawlerScrapy (+http://www.yourdomain.com)'
 
