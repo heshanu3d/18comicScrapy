@@ -15,7 +15,7 @@ class Comic18Spider(CrawlSpider):
     allowed_domains = [base_website_url]
     # start_urls = ['https://18comic.org/']
     # start_urls = ['https://18comic.org/search/photos?search_query=全彩']
-    start_urls = ['https://18comic.org/album/216659/'] #sub
+    start_urls = ['https://18comic.org/album/125583/'] #sub
     # start_urls = ['https://18comic.org/album/159976/'] #page
     # start_urls = ['https://18comic.org/photo/143749'] #sub_page
 
@@ -24,7 +24,7 @@ class Comic18Spider(CrawlSpider):
 
     rules = (
         # Rule(LinkExtractor(allow=r'18comic.org/search/photos\?search_query=全彩&page=\d+'), follow=True),
-        Rule(LinkExtractor(allow=r'album/216659'), callback='parse_album', process_request='rule_process_request_modify_prior', follow=True),
+        Rule(LinkExtractor(allow=r'album/125583'), callback='parse_album', process_request='rule_process_request_modify_prior', follow=True),
         # Rule(LinkExtractor(allow=r'photo/'), callback='parse_subpage', follow=True),
     )
 
