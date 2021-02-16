@@ -24,6 +24,23 @@
 
 ```Rule(LinkExtractor(allow=r'album/'), callback='parse_album', process_request='rule_process_request_modify_prior', follow=True)```
 
+- # 切片功能
+    【图片级】    
+    ```path = "D:\\PycharmProjects\\comic18ScrapyOut\\弱點弱点\\第57話91\\001.jpg"```    
+    ```img_spi = ImgSpice(path)```    
+    ```img_spi.spice()```
+    
+    【章节级】    
+    ```path = "D:\\PycharmProjects\\comic18ScrapyOut\\弱點弱点\\第57話91"```    
+    ```chapter_spi = ChapterSpice(path)```    
+    ```chapter_spi.spice()```
+    
+    【画册级】    
+    ```path = "D:\\PycharmProjects\\comic18ScrapyOut\\弱點弱点"```    
+    ```album_spi = AlbumSpice(path)```    
+    ```album_spi.spice()```    
+
+
 - # 调试方法
 
 1. run/debug configuration中创建新的配置项

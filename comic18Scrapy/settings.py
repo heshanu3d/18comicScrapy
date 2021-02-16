@@ -23,6 +23,7 @@ IMAGES_STORE = '../comic18ScrapyOut'
 LOG_LEVEL = "INFO"
 REDIS_URL = "redis://127.0.0.1:6379"
 
+IMAGES_STORE_DIR_NAME = IMAGES_STORE[3:]
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'comicCrawlerScrapy (+http://www.yourdomain.com)'
